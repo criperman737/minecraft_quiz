@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Quiz criperman</title>
+    <link rel="icon" href="criperman.png" type="image/x-icon">
+    <link rel="stylesheet" href="m_quiz.css">
+</head>
+<body>
+    <h1 style="text-shadow: 2px 2px 5px black;">Minecraft Quiz</h1>
+    <button id="start-button" onclick="startGame()">🎮 Boshlash</button>
+    <div id="level-container">
+        <h2>🏆 Darajalar</h2>
+        <button onclick="selectLevel(1)" id="level1">1-Daraja</button>
+        <button onclick="selectLevel(2)" id="level2" class="disabled" disabled>2-Daraja</button>
+        <button onclick="selectLevel(3)" id="level3" class="disabled" disabled>3-Daraja</button><br>
+        <button onclick="selectLevel(4)" id="level4" class="disabled" disabled>4-Daraja</button>
+        <button onclick="selectLevel(5)" id="level5" class="disabled" disabled>5-Daraja</button>
+        <button onclick="selectLevel(6)" id="level6" class="disabled" disabled>6-Daraja</button>
+        <button onclick="selectLevel(7)" id="level7" class="disabled" disabled>7-Daraja</button>
+        <button onclick="selectLevel(8)" id="level8" class="disabled" disabled>8-Daraja</button>
+        <button onclick="selectLevel(9)" id="level9" class="disabled" disabled>9-Daraja</button><br>
+        <button onclick="selectLevel(10)" id="level10" class="disabled" disabled>10-Daraja</button>
+        <button onclick="selectLevel(11)" id="level11" class="disabled" disabled>11-Daraja</button>
+        <button onclick="selectLevel(12)" id="level12" class="disabled" disabled>12-Daraja</button>
+
+        <button onclick="goBackToMenu()" style="background: red;">⬅ Orqaga</button>
+    </div>
+    <div id="quiz-container">
+        <h2 id="question">Savol</h2>
+        <div id="answers"></div>
+        <button onclick="nextQuestion()">➡ Keyingi</button>
+    </div>
+    <script>
+        let levels = {
+            1: [
+                { question: "Minecraftda eng qattiq blok qaysi?", answers: ["Bedrock", "Obsidian", "Diamond Block"], correct: 0 },
+                { question: "Minecraftning yaratuvchisi kim?", answers: ["Markus Persson", "Jeb", "Bill Gates"], correct: 0 },
+                { question: "Minecraft qachon chiqarilgan?", answers: ["2009", "2011", "2013"], correct: 1 }
+            ],
+            2: [
+                { question: "Netherda qanday modda yo‘q?", answers: ["Suv", "Lava", "Soul Sand"], correct: 0 },
+                { question: "Ender Dragonni o‘ldirganda nima tushadi?", answers: ["XP", "Elytra", "Dragon Egg"], correct: 2 },
+                { question: "Minecraftning eng kuchli quroli nima?", answers: ["Trident", "Netherite Sword", "Bow"], correct: 1 }
+            ],
+            3: [
+                { question: "Creeper qanday paydo bo‘ldi?", answers: ["Xato kod", "Mod", "Yangi yirtqich"], correct: 0 },
+                { question: "Minecraftning asosiy o‘yin rejimi qaysi?", answers: ["Survival", "Creative", "Hardcore"], correct: 0 },
+                { question: "Minecraftda qaysi modda suvda o‘t olmaydi?", answers: ["Magma Block", "Obsidian", "Netherrack"], correct: 1 }
+            ],
+            4: [
+                { question: "Minecraft'da qaysi blokni gravitatsiya ta’sir qiladi?", answers: ["tosh", "qum", "end to'shi"], correct: 1 },
+                { question: "Eng kuchli bronya materiali qaysi?", answers: ["temirli", "netheretli", "olmasli"], correct: 1 },
+                { question: "Villager qaysi mobdan qo‘rqadi?", answers: ["Piglin ", "Blaze", "zonbie"], correct: 2 }
+            ],
+            5: [
+                { question: "qaysi block yanadi?", answers: ["stone", "gold block", "wood"], correct: 2 },
+                { question: "Minecraftda qancha turdagi yog‘och bor?", answers: ["8", "10", "6"], correct: 2 },
+                { question: "Bir qozondagi suvni to‘liq to‘ldirish uchun nechta qor parchasiga ehtiyoj bor?", answers: ["9 ", "4", "5"], correct: 1 }
+            ],
+            6: [
+                { question: "Minecraftda qancha turdagi baliq mavjud?", answers: ["5x8-18", "90-40=10x39", "2+5-3+90-80x2-24"], correct: 2 },
+                { question: "minecraftda endermanni dushmani nima?", answers: ["endermite", "suv", "qo'y"], correct: 2 },
+                { question: "netherda nech biom bor?", answers: ["8+90-60+80-40", "x-40+60x50=1250", "90+83-83+40-(90+48)"], correct: 1 }
+            ],
+            7: [
+                { question: "qizil qalada qaysi mob paydo boladi?", answers: ["enderman", "wither skaleton", " strider"], correct: 1 },
+                { question: "minecraftda (soul speed) qanday blocklarda ishlaydi?", answers: ["rux qumi", "shagal", "jum"], correct: 0 },
+                { question: "qanotlarni tezlash tirish uchun nima kerak?", answers: ["qarmoq", "gul", "salyut"], correct: 2 }
+            ],
+            8: [
+                { question: "netherda compis qanday ishlaydi?", answers: ["hardoyimgidek", "faqat s ni korsatib", "ummuman ishlamaydi"], correct: 2 },
+                { question: "(frost walker) nima qiladi?", answers: ["xp beradi", "suvni lava qiladi", "suvni muzlatadi"], correct: 2 },
+                { question: "technoblade kim?", answers: ["youtuber", "afsona", "bedwars qiroli", "hammasi to'gri" ], correct: 3 }
+            ],
+            9: [
+                { question: "holtaga neta narsa sigadi?", answers: ["64ta", "220ta", "90ta", "128ta"], correct: 0 },
+                { question: "ender sandigi qanday ishlaydi?", answers: ["odi sandiqqa o'xshab illaydi", "1 nechta sunduq birlashgan boladi ", "ishlamaydi"], correct: 1 },
+                { question: "oltin qilichni joni nechta?", answers: ["38ta", "90ta", "32ta", "190"], correct: 2 }
+            ],
+            10: [
+                { question: "qaysi enchant (mending) bilan to'g'ri ishlamaydi", answers: ["buzulmaslik", "cheksizlik", "yechilmaslik lanati"], correct: 1 },
+                { question: "temir golen nechta temir beradi?", answers: ["9ta", "2ta", "5ta"], correct: 2 },
+                { question: "wither boshi tushush foyizi necha foyiz?", answers: ["10% ", "2.5%", "1%"], correct: 1 }
+            ],
+            11: [
+                { question: "minecraftda necha xp olsa boladi maxda?", answers: ["9999l", "130813l", "cheksiz"], correct: 2 },
+                { question: "qaysi mob nayza beradi", answers: ["skalet", "meni do'stim", "suv zondeisi"], correct: 2 },
+                { question: "minecraftni nima tugatadi", answers: ["ajdarni kil qilsa ", "maqastni bajarsa", "o'lsa"], correct: 1 }
+            ],
+            12: [
+                { question: "bedrock minecraft qaysi tildan qilingan? dasturlash tilidan", answers: ["java", "c++", "pythen"], correct: 1 },
+                { question: "minecraftda endermanni dushmani nima?", answers: ["endermite", "suv", "qo'y"], correct: 2 },
+                { question: "qanotlar end shaxtini qotida boladi?", answers: ["kemada", "sandiqni ichida", "ajdar boshini oldida"], correct: 0 }
+            ]
+        };
+
+        let currentLevel = 1;
+        let currentQuestion = 0;
+        let score = 0;
+        let questions = [];
+
+        function startGame() {
+            document.getElementById("start-button").style.display = "none";
+            document.getElementById("level-container").style.display = "block";
+        }
+
+        function goBackToMenu() {
+            document.getElementById("level-container").style.display = "none";
+            document.getElementById("start-button").style.display = "block";
+        }
+
+        function selectLevel(level) {
+            currentLevel = level;
+            questions = levels[level];
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById("level-container").style.display = "none";
+            document.getElementById("quiz-container").style.display = "block";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            let q = questions[currentQuestion];
+            document.getElementById("question").innerText = q.question;
+            let answersDiv = document.getElementById("answers");
+            answersDiv.innerHTML = "";
+            q.answers.forEach((ans, index) => {
+                let btn = document.createElement("button");
+                btn.innerText = ans;
+                btn.onclick = () => checkAnswer(index);
+                answersDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(index) {
+            if (index === questions[currentQuestion].correct) {
+                score++;
+                alert("To‘g‘ri! ✅");
+            } else {
+                alert("Noto‘g‘ri ❌");
+            }
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-container").style.display = "none";
+                alert(`Daraja tugadi! Natija: ${score}/${questions.length}`);
+                if (score >= 2) {
+                    let nextLevel = document.getElementById(`level${currentLevel + 1}`);
+                    if (nextLevel) {
+                        nextLevel.disabled = false;
+                        nextLevel.classList.remove("disabled");
+                    }
+                }
+                document.getElementById("level-container").style.display = "block";
+            }
+        }
+
+    </script>
+</body>
+</html>
